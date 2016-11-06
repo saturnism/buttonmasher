@@ -23,7 +23,7 @@ run:
 
 push: build
 	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP)
-	gcloud docker push gcr.io/$(PROJECT_ID)/$(APP)
+	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP)
 
 deploy: push
 	kubectl scale rc buttonmasher-frontend --replicas=0

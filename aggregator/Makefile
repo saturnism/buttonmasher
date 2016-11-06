@@ -23,4 +23,4 @@ run:
 
 push: build
 	docker tag -f $(APP) gcr.io/$(PROJECT_ID)/$(APP)
-	gcloud docker push gcr.io/$(PROJECT_ID)/$(APP)
+	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP)
