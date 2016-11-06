@@ -7,6 +7,7 @@ This is the code base for several Google Cloud Platform NEXT 2016 presentation d
 
 ## High-level Architecture
 At a high-level you'll need the following to run/try the example:
+
 1. A Google Cloud Platform account (You can use [Free trial](https://cloud.google.com/free-trial/))
 1. A Google Cloud Platform project
 1. Configure multiple Kubernetes clusters on Google Container Engine, and configure federation (Details in Kelsey Hightower's [Kubernetes Cluster Federation instructions](https://github.com/kelseyhightower/kubernetes-cluster-federation))
