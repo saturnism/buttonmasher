@@ -20,7 +20,7 @@ The best way to learn is to set up everything manually. But if you are in a hurr
 
 ## Setup
 ### Bootstrap
-1. See [bootstrap/README.md](bootstrap/README.md)
+See [bootstrap/README.md](bootstrap/README.md)
 
 ### The Demo
 See [demo/README.md](demo/README.md)
