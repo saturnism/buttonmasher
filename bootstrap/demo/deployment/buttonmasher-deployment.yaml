@@ -32,7 +32,7 @@ spec:
         version: latest
     spec:
       containers:
-      - name: buttonmsaher-frontend
+      - name: buttonmasher-frontend
         image: gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest
         ports:
         - containerPort: 80
@@ -63,7 +63,7 @@ spec:
         version: latest
     spec:
       containers:
-      - name: buttonmsaher-backend
+      - name: buttonmasher-backend
         image: gcr.io/hybrid-cloud-rocks/buttonmasher-backend:v1
         ports:
         - containerPort: 8080
