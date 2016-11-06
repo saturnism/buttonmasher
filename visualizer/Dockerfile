@@ -15,7 +15,7 @@
 ################################################################################
 FROM nginx:1.8.1
 COPY gzip_static.conf /etc/nginx/conf.d/
-COPY *.html /usr/share/nginx/html/
-RUN gzip -k /usr/share/nginx/html/*.html
-COPY *.js /usr/share/nginx/html/
-RUN gzip -k /usr/share/nginx/html/*.js
+COPY index.html /usr/share/nginx/html/
+RUN gzip -k /usr/share/nginx/html/index.html
+COPY script.js /usr/share/nginx/html/
+RUN gzip -k /usr/share/nginx/html/script.js
