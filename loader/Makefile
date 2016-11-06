@@ -20,4 +20,4 @@ build:
 
 push: build
 	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP):v1
-	gcloud docker push gcr.io/$(PROJECT_ID)/$(APP):v1
+	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP):v1
