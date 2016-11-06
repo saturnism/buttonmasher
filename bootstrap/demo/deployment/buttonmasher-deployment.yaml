@@ -1,0 +1,141 @@
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###############################################################################
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buttonmasher-frontend
+  labels:
+    app: buttonmasher-frontend
+    version: latest
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: buttonmasher-frontend
+      version: latest
+  template:
+    metadata:
+      labels:
+        app: buttonmasher-frontend
+        version: latest
+    spec:
+      containers:
+      - name: buttonmsaher-frontend
+        image: gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 2
+          timeoutSeconds: 1
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buttonmasher-backend
+  labels:
+    app: buttonmasher-backend
+    version: latest
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: buttonmasher-backend
+      version: latest
+  template:
+    metadata:
+      labels:
+        app: buttonmasher-backend
+        version: latest
+    spec:
+      containers:
+      - name: buttonmsaher-backend
+        image: gcr.io/hybrid-cloud-rocks/buttonmasher-backend:v1
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/healthz
+            port: 8080
+          initialDelaySeconds: 2
+          timeoutSeconds: 1
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buttonmasher-aggregator
+  labels:
+    app: buttonmasher-aggregator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buttonmasher-aggregator
+  template:
+    metadata:
+      labels:
+        app: buttonmasher-aggregator
+        version: latest
+    spec:
+      containers:
+      - name: buttonmasher-aggregator
+        image: gcr.io/hybrid-cloud-rocks/buttonmasher-aggregator:latest
+        command:
+        - app
+        - -selector=app=buttonmasher-backend
+        - -use-ip=true
+        - -sleep=1s
+        - -address=0.0.0.0:8080
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /api/healthz
+            port: 8080
+          initialDelaySeconds: 2
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 500m
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: buttonmasher-visualizer
+  labels:
+    app: buttonmasher-visualizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buttonmasher-visualizer
+  template:
+    metadata:
+      labels:
+        app: buttonmasher-visualizer
+    spec:
+      containers:
+      - name: buttonmasher-visualizer
+        image: gcr.io/hybrid-cloud-rocks/buttonmasher-visualizer:latest
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 2
+          timeoutSeconds: 1

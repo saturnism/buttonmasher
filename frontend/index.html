@@ -1,0 +1,166 @@
+<!--
+  Copyright 2016 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+    <title>Hybrid Cloud Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:700,600,500,400,300,200,100);
+        @import url(https://fonts.googleapis.com/css?family=Roboto+Mono:400,700);
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            background: #2a3840;
+            color: white;
+            font-family: Roboto;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100%;
+            background: url('waves.png') no-repeat;
+            background-size: 100% auto;
+            background-position: 0 100%;
+        }
+        
+        .container h1 {
+            text-align: center;
+            font-size: 13.5vw;
+            font-weight: 400;
+            margin-top: 0.6em;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+            text-align: center;
+        }
+        
+        .footer .sendRequest {
+            background: #4285f4;
+            font-size: 5.25vw;
+            letter-spacing: 0.5vw;
+            width: 70%;
+            margin: 0 auto;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-family: Roboto;
+            border-radius: 1.5vw;
+            border: none;
+            padding: 6vh 0;
+            outline: none;
+            box-shadow: 2px 2px 4px #000;
+        }
+        
+        .footer .sendRequest:active {
+            background: #3367d6;
+        }
+        
+        .footer h2 {
+            font-size: 7vw;
+            letter-spacing: 2px;
+            font-weight: 400;
+            margin-bottom: 0.25vh;
+        }
+        
+        .footer .logo {
+            width: 25vw;
+            height: auto;
+            margin-bottom: 4vh;
+        }
+        
+        @media only screen and (min-width: 650px) {
+            .container {
+                padding-top: 40px;
+                background-size: 100% 75%;
+                background-position: center bottom;
+            }
+            .container h1 {
+                font-size: 90px;
+                margin: 0;
+            }
+            .footer .sendRequest {
+                border-radius: 10px;
+                height: 100px;
+                width: 300px;
+                font-size: 20px;
+                letter-spacing: 2px;
+                padding: 0;
+            }
+            .footer .logo {
+                width: 112px;
+                margin-bottom: 30px;
+            }
+            .footer h2 {
+                font-size: 41px;
+                margin-bottom: 2px;
+                letter-spacing: 1.5px;
+            }
+        }
+        
+        .v2.sendRequest:active {
+            background-color: #14661a;
+        }
+        
+        .v2.sendRequest {
+            background-color: #20a229;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                function call() {
+                    return $.ajax({
+                        url: 'http://api.hybrid-cloud-rocks.com:8080/api/next'
+                    }).done(function(r) {
+                        $('#play').removeClass().addClass('sendRequest').addClass(r.v);
+                        $('#play').text(r.v + ": " + r.m);
+                    });
+                }
+                $('#play').click(function(e) {
+                    e.preventDefault();
+                    call();
+                });
+            });
+        })(jQuery);
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>hcr.k8s.io</h1>
+        <h1><img src="qr.png" width="290" /></h1>
+        <div class="footer">
+            <button id="play" class="sendRequest">Send Request</button>
+            <h2>Kubernetes</h2>
+        </div>
+    </div>
+</body>
+
+</html>
