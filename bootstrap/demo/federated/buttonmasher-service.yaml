@@ -69,3 +69,4 @@ spec:
   selector:
     app: buttonmasher-aggregator
   type: LoadBalancer
+---
