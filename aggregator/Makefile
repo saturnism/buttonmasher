@@ -22,5 +22,5 @@ run:
 	docker run -ti --rm -p 8080:8080 $(APP)
 
 push: build
-	docker tag -f $(APP) gcr.io/$(PROJECT_ID)/$(APP)
+	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP)
 	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP)

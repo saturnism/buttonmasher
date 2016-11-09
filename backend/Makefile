@@ -24,15 +24,15 @@ run:
 	docker run -ti --rm -p 8080:8080 $(APP)
 
 push: build
-	docker tag -f $(APP) gcr.io/$(PROJECT_ID)/$(APP)
+	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP)
 	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP)
 
 push-v1: build
-	docker tag -f $(APP) gcr.io/$(PROJECT_ID)/$(APP):v1
+	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP):v1
 	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP):v1
 
 push-v2: build
-	docker tag -f $(APP) gcr.io/$(PROJECT_ID)/$(APP):v2
+	docker tag $(APP) gcr.io/$(PROJECT_ID)/$(APP):v2
 	gcloud docker -- push gcr.io/$(PROJECT_ID)/$(APP):v2
 
 clean:
