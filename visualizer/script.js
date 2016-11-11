@@ -30,7 +30,7 @@ var ScaleApp = function(http, scope, q) {
     this.aggregatorNames = store.get('aggregatorNames');
     if (!this.aggregatorNames) {
       console.log("Aggregator Names not in Local Storage, setting default values.");
-      this.aggregatorNames = {"buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.us-central1-c.us-central1.hybrid-cloud-rocks.com":"Central","buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.asia-east1-c.asia-east1.hybrid-cloud-rocks.com":"Asia", "buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.europe-west1-c.europe-west1.hybrid-cloud-rocks.com": "Europe"};
+      this.aggregatorNames = {"buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.us-central1-c.us-central1.hybrid-cloud-rocks.com":"US","buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.asia-east1-c.asia-east1.hybrid-cloud-rocks.com":"Asia", "buttonmasher-aggregator.default.hybrid-cloud-rocks.svc.europe-west1-c.europe-west1.hybrid-cloud-rocks.com": "Europe"};
       store.set('aggregatorNames', this.aggregatorNames);
     }
     console.log("Use your browser's Developer Tool to update configurations in the Local Storage");

@@ -41,54 +41,6 @@
 	    </canvas>
 	  </div>
 	</div>
-  <!--
-	<div layout="row">
-	  <div layout-margin="10px" flex="25" style="text-align: right">
-	    <div class="md-subhead">Avg. Request Latency</div>
-	    <div style="text-align: right">
-	      <div class="md-display-1">{{ controller.getLatency()["mean"] | number:2 }} ms</div>
-	    </div>
-	    <div class="md-subhead">99% Request Latency</div>
-	    <div style="text-align: right">
-	      <div class="md-display-1">{{ controller.getLatency()["99th"] | number:2 }} ms</div>
-	    </div>
-	  </div>
-	  <div flex layout-margin="10px">
-	    <canvas id="latency" class="chart chart-line" chart-data="controller.latencyData" chart-legend="false"
-		    chart-labels="controller.labels" chart-series="controller.latencySeries"
-		    chart-options="controller.latencyOptions">
-	    </canvas>
-	  </div>
-	</div>
-  -->
-	<div layout="row">
-    <!--
-	  <div layout-margin="10px" flex="25" style="text-align: right">
-	    <div class="md-subhead">Server Availability</div>
-	    <div style="text-align: right">
-	      <div class="md-display-1">{{ controller.getSuccess() | number:0 }}%</div>
-	    </div>
-	  </div>
-    -->
-    <!--
-	  <div layout-margin="10px" flex="20" style="text-align: right">
-	    <div class="md-subhead"># Servers</div>
-	    <div style="text-align: right">
-	      <div class="md-display-1">{{ controller.getServerCount() | number:0 }}</div>
-	    </div>
-	  </div>
-    <div layout-margin="10px" style="margin-left: 25px" flex>
-    </div>
-    -->
-    <!--
-	  <div layout-margin="10px" flex="17" style="text-align: right">
-	    <div class="md-subhead"># Loadbots</div>
-	    <div style="text-align: right">
-	      <div class="md-display-1">{{ controller.getLoadbotCount() | number:0 }}</div>
-	    </div>
-	  </div>
-    -->
-	</div>
   <div layout="row">
 
   <div layout-margin="10px" flex="25" style="text-align: right">
