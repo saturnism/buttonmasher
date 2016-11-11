@@ -97,7 +97,6 @@ spec:
         command:
         - app
         - -selector=app=buttonmasher-backend
-        - -use-ip=true
         - -sleep=1s
         - -address=0.0.0.0:8080
         ports:

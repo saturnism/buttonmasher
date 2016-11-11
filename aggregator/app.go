@@ -25,22 +25,22 @@ import (
 	"sync"
 	"time"
 
-	"k8s.io/kubernetes/pkg/api"
-	client "k8s.io/kubernetes/pkg/client/unversioned"
-	"k8s.io/kubernetes/pkg/client/unversioned/clientcmd"
-	"k8s.io/kubernetes/pkg/fields"
-	"k8s.io/kubernetes/pkg/labels"
+	"k8s.io/client-go/1.4/kubernetes"
+	"k8s.io/client-go/1.4/pkg/api"
+	"k8s.io/client-go/1.4/pkg/api/v1"
+	"k8s.io/client-go/1.4/rest"
+
+	"k8s.io/client-go/1.4/pkg/fields"
+	"k8s.io/client-go/1.4/pkg/labels"
 )
 
 var (
-	addr     = flag.String("address", "localhost:8080", "The address to serve on")
-	selector = flag.String("selector", "", "The label selector for pods")
-	useIP    = flag.Bool("use-ip", false, "Use IP for aggregation")
-	sleep    = flag.Duration("sleep", 3*time.Second, "The sleep period between aggregations")
-  httpClient   = http.Client{
-    Timeout: time.Duration(2 * time.Second),
-  }
-
+	addr       = flag.String("address", "localhost:8080", "The address to serve on")
+	selector   = flag.String("selector", "", "The label selector for pods")
+	sleep      = flag.Duration("sleep", 3*time.Second, "The sleep period between aggregations")
+	httpClient = http.Client{
+		Timeout: time.Duration(2 * time.Second),
+	}
 
 	serveData = []byte{}
 	lock      = sync.Mutex{}
@@ -110,13 +110,12 @@ func getField(obj map[string]interface{}, fields ...string) (interface{}, bool) 
 }
 
 func loadData() {
-	config := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(&clientcmd.ClientConfigLoadingRules{}, &clientcmd.ConfigOverrides{})
-	clientConfig, err := config.ClientConfig()
+	config, err := rest.InClusterConfig()
 	if err != nil {
 		fmt.Printf("Error creating client config: %v", err)
 		return
 	}
-	c, err := client.New(clientConfig)
+	c, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		fmt.Printf("Error creating client: %v", err)
 		return
@@ -131,7 +130,7 @@ func loadData() {
 	} else {
 		labelSelector = labels.Everything()
 	}
-	pods, err := c.Pods(api.NamespaceDefault).List(api.ListOptions{
+	pods, err := c.Core().Pods(api.NamespaceDefault).List(api.ListOptions{
 		LabelSelector: labelSelector,
 		FieldSelector: fields.Everything(),
 	})
@@ -139,7 +138,7 @@ func loadData() {
 		fmt.Printf("Error getting pods: %v", err)
 		return
 	}
-	instances := []*api.Pod{}
+	instances := []*v1.Pod{}
 	for ix := range pods.Items {
 		pod := &pods.Items[ix]
 		if pod.Status.PodIP == "" || pod.Status.Phase != "Running" {
@@ -159,26 +158,18 @@ func loadData() {
 			defer wg.Done()
 			pod := instances[ix]
 			var data []byte
-			if *useIP {
-				url := "http://" + pod.Status.PodIP + ":8080/api/stats"
-				resp, err := httpClient.Get(url)
-				if err != nil {
-					fmt.Printf("Error getting: %v\n", err)
-					return
-				}
-				defer resp.Body.Close()
-				if data, err = ioutil.ReadAll(resp.Body); err != nil {
-					fmt.Printf("Error reading: %v\n", err)
-					return
-				}
-			} else {
-				var err error
-				data, err = c.RESTClient.Get().AbsPath("/api/v1/proxy/namespaces/default/pods/" + pod.Name + ":8080/api/stats").DoRaw()
-				if err != nil {
-					fmt.Printf("Error proxying to pod: %v\n", err)
-					return
-				}
+			url := "http://" + pod.Status.PodIP + ":8080/api/stats"
+			resp, err := httpClient.Get(url)
+			if err != nil {
+				fmt.Printf("Error getting: %v\n", err)
+				return
 			}
+			defer resp.Body.Close()
+			if data, err = ioutil.ReadAll(resp.Body); err != nil {
+				fmt.Printf("Error reading: %v\n", err)
+				return
+			}
+
 			var stat Stat
 			if err := json.Unmarshal(data, &stat); err != nil {
 				fmt.Printf("Error decoding: %v\n", err)

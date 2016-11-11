@@ -21,8 +21,10 @@ RUN apt-get install -y -qq ca-certificates
 RUN mkdir -p /go/src/app
 WORKDIR /go/src/app
 
-RUN mkdir -p $GOPATH/src/k8s.io && cd $GOPATH/src/k8s.io && git clone https://github.com/kubernetes/kubernetes.git && cd kubernetes
-RUN ln -s $GOPATH/src/k8s.io/kubernetes/Godeps/_workspace/src/* /go/src/; ln -s $GOPATH/src/k8s.io/kubernetes/Godeps/_workspace/src/k8s.io/* /go/src/k8s.io/
+RUN mkdir -p $GOPATH/src/k8s.io && \
+    cd $GOPATH/src/k8s.io && \
+    git clone https://github.com/kubernetes/client-go.git && \
+    cd client-go && git checkout v1.4.0
 
 COPY . /go/src/app
 
