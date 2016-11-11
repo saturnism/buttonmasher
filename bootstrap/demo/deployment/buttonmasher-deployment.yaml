@@ -40,7 +40,14 @@ spec:
             "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
             "command": ["/usr/bin/qrencode","-o","/data/qr.png","-s16","-lQ","-m1","http://hcr.k8s.io"],
             "volumeMounts":[{"name":"data","mountPath":"/data"}]
-          }]'
+          },
+          {
+            "name":"gzip",
+            "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "command": ["/bin/bash", "-c", "gzip -k /data/*"],
+            "volumeMounts": [{"name":"data","mountPath":"/data"}]
+          }
+          ]'
       labels:
         app: buttonmasher-frontend
         version: latest
