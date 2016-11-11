@@ -14,7 +14,11 @@
 #
 ################################################################################
 FROM nginx:1.8.1
+RUN apt-get update && apt-get -y install qrencode && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+VOLUME /data
+RUN qrencode -o /usr/share/nginx/html/qr.png -s 16 -l Q -m 1 http://hcr.k8s.io
 COPY *.png /usr/share/nginx/html/
 COPY gzip_static.conf /etc/nginx/conf.d/
 COPY index.html /usr/share/nginx/html/
-RUN gzip -k /usr/share/nginx/html/index.html

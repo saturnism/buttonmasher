@@ -27,13 +27,33 @@ spec:
       version: latest
   template:
     metadata:
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+            "name":"copy",
+            "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "command": ["/bin/bash", "-c", "cp -a /usr/share/nginx/html/* /data"],
+            "volumeMounts": [{"name":"data","mountPath":"/data"}]
+          },
+          {
+            "name":"qrcode",
+            "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "command": ["/usr/bin/qrencode","-o","/data/qr.png","-s16","-lQ","-m1","http://hcr.k8s.io"],
+            "volumeMounts":[{"name":"data","mountPath":"/data"}]
+          }]'
       labels:
         app: buttonmasher-frontend
         version: latest
     spec:
+      volumes:
+      - name: data
+        emptyDir: {}
       containers:
       - name: buttonmasher-frontend
         image: gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
         ports:
         - containerPort: 80
         livenessProbe:
