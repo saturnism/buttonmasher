@@ -32,7 +32,10 @@ ez: $(addsuffix -ez,$(CLUSTER_REGIONS))
 		--user=$(cluster_context)
 
 federation-deploy:
-	cat federated/*.yaml | sed -e 's|FEDERATION_NAME|$(FEDERATION_NAME)|g' | kubectl --context=federation-cluster apply -f -
+	for file in federated/*.yaml ; \
+  do \
+  	cat $$file | sed -e 's|FEDERATION_NAME|$(FEDERATION_NAME)|g' | kubectl --context=federation-cluster apply -f - ; \
+	done
 
 deploy: $(addsuffix -deploy,$(CLUSTER_REGIONS))
 
