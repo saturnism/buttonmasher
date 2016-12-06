@@ -39,7 +39,7 @@ deploy-v2:
 deploy:
 	kubectl --kubeconfig=kubeconfig apply -f ../demo/buttonmasher-v1.yaml
 
-reset:
+reset: unfederate
 	kubectl --kubeconfig=kubeconfig delete deployment buttonmasher-backend
 
 unfederate: federation-vars
