@@ -32,18 +32,28 @@ spec:
           {
             "name":"copy",
             "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "imagePullPolicy": "IfNotPresent",
             "command": ["/bin/bash", "-c", "cp -a /usr/share/nginx/html/* /data"],
             "volumeMounts": [{"name":"data","mountPath":"/data"}]
           },
           {
             "name":"qrcode",
             "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
-            "command": ["/usr/bin/qrencode","-o","/data/qr.png","-s16","-lQ","-m1","http://hcr.k8s.io"],
+            "imagePullPolicy": "IfNotPresent",
+            "command": ["/usr/bin/qrencode","-o","/data/qr.png","-s16","-lQ","-m1","http://FRONTEND_DOMAIN"],
             "volumeMounts":[{"name":"data","mountPath":"/data"}]
           },
           {
+            "name":"html",
+            "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "imagePullPolicy": "IfNotPresent",
+            "command": ["/bin/bash", "-c", "/bin/sed -e s/hcr.k8s.io/FRONTEND_DOMAIN/g /usr/share/nginx/html/index.html > /data/index.html"],
+            "volumeMounts":[{"name":"data","mountPath":"/data"}]
+         },
+         {
             "name":"gzip",
             "image":"gcr.io/hybrid-cloud-rocks/buttonmasher-frontend:latest",
+            "imagePullPolicy": "IfNotPresent",
             "command": ["/bin/bash", "-c", "gzip -k /data/*"],
             "volumeMounts": [{"name":"data","mountPath":"/data"}]
           }

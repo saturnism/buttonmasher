@@ -22,11 +22,13 @@ space := $(empty) $(empty)
 default:
 	@echo "Create clusters: make create"
 	@echo "Fetch credentials: make credentials"
+	@echo "Do both: make clusters-all"
 
 create: $(addsuffix -create,$(CLUSTER_REGIONS))
 
 %-create: %-vars
 	gcloud container --project $(PROJECT_ID) clusters create $(cluster_name) \
+		--cluster-version $(CLUSTER_VERSION) \
 		--zone $(cluster_zone) \
 		--machine-type $(CLUSTER_MACHINE_TYPE) \
 		--image-type $(CLUSTER_IMAGE_TYPE) \
@@ -39,5 +41,13 @@ credentials: $(addsuffix -credentials,$(CLUSTER_REGIONS))
 	gcloud container --project $(PROJECT_ID) clusters get-credentials $(cluster_name) \
 		--zone $(cluster_zone)
 
+%-delete: %-vars
+	-gcloud container --project $(PROJECT_ID) clusters delete $(cluster_name) \
+		--async -q \
+		--zone $(cluster_zone)
+
 clusters-all: create credentials
 
+delete: $(addsuffix -delete,$(CLUSTER_REGIONS))
+
+delete-all: delete

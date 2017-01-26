@@ -137,7 +137,7 @@
             $(document).ready(function() {
                 function call() {
                     return $.ajax({
-                        url: 'http://api.hybrid-cloud-rocks.com:8080/api/next'
+                        url: '/api/next'
                     }).done(function(r) {
                         $('#play').removeClass().addClass('sendRequest').addClass(r.v);
                         $('#play').text(r.v + ": " + r.m);

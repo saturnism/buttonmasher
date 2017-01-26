@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: buttonmasher-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: buttonmasher-ingress
+spec:
+  backend:
+    serviceName: buttonmasher-frontend
+    servicePort: 80
+  rules:
+  - http:
+      paths:
+      - path: /api/next
+        backend:
+          serviceName: buttonmasher-backend
+          servicePort: 8080

@@ -1,9 +1,11 @@
 ## Pre-requisite
-1. Google Cloud Platform account
-1. Google Cloud Platform project
-1. Enable Google Compute Engine API and Google Cloud DNS API
-1. Installed `gcloud` SDK and installed `kubectl` component
-1. DNS domain in order to run the demo
+1. Google Cloud Platform account. If you don't have one already, use [free trial](https://cloud.google.com/free-trial/).
+1. Google Cloud Platform project. See [Create, shutdown, and store projects](https://support.google.com/cloud/answer/6251787).
+1. Enable Google Compute Engine API and Google Cloud DNS API. See [Enable and disable APIs](https://support.google.com/cloud/answer/6158841).
+1. Installed `gcloud` SDK see [gcloud SDK Installation](https://cloud.google.com/sdk/downloads#interactive).
+1. Installed `kubectl` component: `gcloud components install kubectl`.
+1. Installed `kubefed` somewhere in your `$PATH`, see [Released Binaries](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#client-binaries) and download the right Kubernetes Client package for your architecture.
+1. DNS domain in order to run the demo.
 
 ## Deployment
 
