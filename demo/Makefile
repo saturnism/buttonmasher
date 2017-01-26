@@ -19,10 +19,10 @@ deploy-v1: primary-vars
 	kubectl --context=$(primary_cluster_context) apply -f buttonmasher-v1.yaml
 
 load:
-	kubectl --context=federation-cluster scale rs load-bots --replicas=3
+	kubectl --context=federation-cluster scale deployment load-bots --replicas=3
 
 noload:
-	kubectl --context=federation-cluster scale rs load-bots --replicas=0
+	kubectl --context=federation-cluster scale deployment load-bots --replicas=0
 
 rolling-update: primary-vars
 	kubectl --context=$(primary_cluster_context) apply -f buttonmasher-v2.yaml

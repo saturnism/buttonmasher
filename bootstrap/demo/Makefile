@@ -25,22 +25,37 @@ default:
 	@echo "You will need to search and replace hybrid-cloud-rocks if you have your own project"
 
 ez: $(addsuffix -ez,$(CLUSTER_REGIONS))
+	kubectl config set-context federation-cluster \
+		--cluster=$(FEDERATION_NAME) \
+		--user=$(FEDERATION_NAME)
 
 %-ez: %-vars
 	kubectl config set-context $(cluster_name) \
 		--cluster=$(cluster_context) \
 		--user=$(cluster_context)
 
+firewall:
+	-gcloud compute firewall-rules create allow-lb --source-ranges 130.211.0.0/22 --allow tcp:30000-65535
+
+ip:
+	-gcloud compute addresses create buttonmasher-ingress --global
+
+ingress: firewall ip
+	kubectl --context=$(FEDERATION_NAME) apply -f buttonmasher-ingress.yaml
+
 federation-deploy:
 	for file in federated/*.yaml ; \
   do \
-  	cat $$file | sed -e 's|FEDERATION_NAME|$(FEDERATION_NAME)|g' | kubectl --context=federation-cluster apply -f - ; \
+		cat $$file | sed -e 's|FEDERATION_NAME|$(FEDERATION_NAME)|g' | kubectl --context=$(FEDERATION_NAME) apply -f - ; \
 	done
 
 deploy: $(addsuffix -deploy,$(CLUSTER_REGIONS))
 
 %-deploy: %-vars
-	kubectl --context=$(cluster_context) apply -f deployment/
+	for file in deployment/*.yaml ; \
+  do \
+		cat $$file | sed -e 's|FRONTEND_DOMAIN|$(FRONTEND_DOMAIN)|g' | kubectl --context=$(cluster_context) apply -f - ; \
+	done
 
 status: $(addsuffix -status,$(CLUSTER_REGIONS))
 	kubectl --context=federation-cluster get svc
@@ -50,4 +65,4 @@ status: $(addsuffix -status,$(CLUSTER_REGIONS))
 	kubectl --context=$(cluster_context) get deployments
 	kubectl --context=$(cluster_context) get svc
 
-demo-all: ez federation-deploy deploy
+demo-all: ez federation-deploy deploy ingress
