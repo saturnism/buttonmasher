@@ -33,18 +33,7 @@ dns:
 	  --dns-name $(FEDERATION_DOMAIN)
 
 controller: federation-vars
-	kubefed init $(FEDERATION_NAME) --host-cluster-context=$(federation_cluster_context) --dns-zone-name=$(FEDERATION_DOMAIN).
-
-kubedns: kubedns-configmap $(addsuffix -kubedns,$(CLUSTER_REGIONS))
-
-kubedns-configmap:
-	cat kubedns-configmap.yaml | \
-		sed -e 's|FEDERATION_NAME|$(FEDERATION_NAME)|g' -e 's|FEDERATION_DOMAIN|$(FEDERATION_DOMAIN)|g' | \
-		kubectl --context=$(FEDERATION_NAME) apply -f - 
-	sleep 10
-
-%-kubedns: %-vars
-	kubectl --context=$(cluster_context) --namespace=kube-system delete pods -l k8s-app=kube-dns
+	kubefed init $(FEDERATION_NAME) --host-cluster-context=$(federation_cluster_context) --dns-zone-name=$(FEDERATION_DOMAIN). --dns-provider=google-clouddns
 
 federate: $(addsuffix -federate,$(CLUSTER_REGIONS))
 
@@ -58,7 +47,6 @@ unfederate: $(addsuffix -unfederate,$(CLUSTER_REGIONS))
 	-kubectl --context=$(federation_cluster_context) --namespace=federation-system delete secret $(cluster_name)
 	-kubectl config use-context $(FEDERATION_CONTEXT)
 	-kubefed unjoin $(cluster_name) --host-cluster-context=$(federation_cluster_context)
-	-kubectl --context=$(federation_cluster_context) delete ns federation-system
 
 federation-all: dns controller federate kubedns
 

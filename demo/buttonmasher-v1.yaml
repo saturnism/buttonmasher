@@ -22,7 +22,7 @@ metadata:
     app: buttonmasher-backend
     version: latest
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: buttonmasher-backend

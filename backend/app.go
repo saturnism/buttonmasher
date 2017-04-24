@@ -29,9 +29,9 @@ import (
 )
 
 var (
-  version       = "v2"
-	//messages      = [...]string{"Say Hello", "Don't Panic!", "Stay Calm.", "Press!"}
-	messages      = [...]string{"Hello!", "GCP Rocks!", "You Rock!", "Woohoo!"}
+	version  = "v1"
+	messages = [...]string{"Say Hello", "Don't Panic!", "Stay Calm.", "Press!"}
+	//messages      = [...]string{"Hello!", "GCP Rocks!", "You Rock!", "Woohoo!"}
 
 	requests      uint64
 	rps           float64
@@ -82,21 +82,21 @@ func init() {
 }
 
 func corsFilter() gin.HandlerFunc {
-     return func(c *gin.Context) {
-         h := c.Writer.Header()
-         h.Set("Access-Control-Allow-Origin", "*")
-         h.Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-         h.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
-         h.Set("Access-Control-Expose-Headers", "Content-Length")
-         h.Set("Access-Control-Allow-Credentials", "true")
+	return func(c *gin.Context) {
+		h := c.Writer.Header()
+		h.Set("Access-Control-Allow-Origin", "*")
+		h.Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		h.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+		h.Set("Access-Control-Expose-Headers", "Content-Length")
+		h.Set("Access-Control-Allow-Credentials", "true")
 
-         if c.Request.Method == "OPTIONS" {
-             c.AbortWithStatus(200)
-         } else {
-             c.Next()
-         }
-     }
- }
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(200)
+		} else {
+			c.Next()
+		}
+	}
+}
 
 func main() {
 	r := gin.Default()
@@ -116,7 +116,7 @@ func main() {
 	}()
 
 	r.Use(gin.LoggerWithWriter(os.Stdout, "/api/next"))
-  r.Use(corsFilter())
+	r.Use(corsFilter())
 
 	r.StaticFile("/", "/go/assets/index.html")
 
@@ -126,15 +126,15 @@ func main() {
 	r.GET("/api/prometheus", gin.WrapH(prometheus.Handler()))
 	r.GET("/api/stats", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-      "v":        version,
-			"t":        atomic.LoadUint64(&requests),
-			"rps":      rps,
+			"v":   version,
+			"t":   atomic.LoadUint64(&requests),
+			"rps": rps,
 		})
 	})
 	r.GET("/api/next", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"m": messages[rand.Intn(len(messages))],
-      "v": version,
+			"v": version,
 		})
 		atomic.AddUint64(&requests, 1)
 	})

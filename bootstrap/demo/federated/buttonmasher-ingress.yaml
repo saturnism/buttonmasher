@@ -5,12 +5,12 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: buttonmasher-ingress
 spec:
-  backend:
-    serviceName: buttonmasher-frontend
-    servicePort: 80
   rules:
   - http:
       paths:
+      - backend:
+          serviceName: buttonmasher-frontend
+          servicePort: 80
       - path: /api/next
         backend:
           serviceName: buttonmasher-backend
