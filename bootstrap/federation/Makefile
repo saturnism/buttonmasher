@@ -34,6 +34,7 @@ dns:
 
 controller: federation-vars
 	kubefed init $(FEDERATION_NAME) --host-cluster-context=$(federation_cluster_context) --dns-zone-name=$(FEDERATION_DOMAIN). --dns-provider=google-clouddns
+	kubectl create namespace default --context=$(federation_cluster_context)
 
 federate: $(addsuffix -federate,$(CLUSTER_REGIONS))
 
@@ -48,5 +49,5 @@ unfederate: $(addsuffix -unfederate,$(CLUSTER_REGIONS))
 	-kubectl config use-context $(FEDERATION_CONTEXT)
 	-kubefed unjoin $(cluster_name) --host-cluster-context=$(federation_cluster_context)
 
-federation-all: dns controller federate kubedns
+federation-all: dns controller federate
 
