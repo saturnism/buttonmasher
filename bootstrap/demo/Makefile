@@ -25,7 +25,7 @@ default:
 	@echo "You will need to search and replace hybrid-cloud-rocks if you have your own project"
 
 ez: $(addsuffix -ez,$(CLUSTER_REGIONS))
-	kubectl config set-context federation-cluster \
+	kubectl config set-context $(FEDERATION_NAME) \
 		--cluster=$(FEDERATION_NAME) \
 		--user=$(FEDERATION_NAME)
 
@@ -58,8 +58,8 @@ deploy: $(addsuffix -deploy,$(CLUSTER_REGIONS))
 	done
 
 status: $(addsuffix -status,$(CLUSTER_REGIONS))
-	kubectl --context=federation-cluster get svc
-	kubectl --context=federation-cluster get clusters
+	kubectl --context=$(FEDERATION_NAME) get svc
+	kubectl --context=$(FEDERATION_NAME) get clusters
 
 %-status: %-vars
 	kubectl --context=$(cluster_context) get deployments
